@@ -1,9 +1,29 @@
 # Johnny Decimal File System Generator
-## porque digitar cansa 
 
-- O que é?
-	- Uma utilidade de terminal simples que gera um sistema de arquivos baseado no sistema Johnny Decimal
-	- Basta escrever um YAML com o formato que você quer, nomeá-lo jd.yaml e rodar o script
-	- Por que? Porque sim
+Um gerador de sistema de arquivos no formato [Johnny Decimal](https://johnnydecimal.com/)
 
-TODO: melhorar esse README kkkkkkk fiz isso 2 da manhã poxa 
+## Instalação e Uso 
+
+- Basta clonar o repositório 
+- Pegue o arquivo de python e o jd.yaml com as pastas que você quer 
+- E rode o script :D
+
+## Roadmap 
+
+- [ ] Implementar isso como módulo do PIP
+
+- [x] Adicionar opções de argumentos de linhas de comando 
+	- [x] Selecionar qual arquivo yaml utilizar 
+	- [x] Selecionar onde que o sistema de arquivos vai ser gerado 
+
+- [ ] Gerenciamento de erros 
+	- [ ] Para quando já existir a pasta lá 
+	- [ ] Para quando o arquivo YAML estiver mal formatado 
+	- [ ] E pros erros que acontecerem (eu ainda não testei tanto)
+
+- [ ] Novas funcionalidades 
+	- [ ] Atualizar os arquivos entre dois JD filesystems sepa? 
+
+## License 
+
+Não sei nem o que botar aqui
