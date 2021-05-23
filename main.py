@@ -4,24 +4,25 @@ import yaml
 import math
 
 JD_ID = 00.00
-# Recebe um pedaço da árvore JD
-# Se for a lista de folhas, itera por elas e termina
-# Se for nó, cria ele, entra e se chama de novo
-def create_directory(layer, jd_data):
-    if type(jd_data) is dict:
+
+def createFilesystem(layer, jd_data):
+    if layer > 3:
+        print("Você passou dos limites amigão")
+        return 
+    elif type(jd_data) is dict:
         for kv_pair in jd_data.items():
-            update_jd_id(layer)
-            os.mkdir(f"{get_jd_id_prefix(layer)} {kv_pair[0]}")
-            os.chdir(f"./{get_jd_id_prefix(layer)} {kv_pair[0]}")
-            create_directory(layer + 1, kv_pair[1])
+            updateJD_ID(layer)
+            os.mkdir(f"{getJD_IDPrefix(layer)} {kv_pair[0]}")
+            os.chdir(f"./{getJD_IDPrefix(layer)} {kv_pair[0]}")
+            createFilesystem(layer + 1, kv_pair[1])
         os.chdir("..")
     else:
         for i in jd_data:
-            update_jd_id(layer)
-            os.mkdir(f"{get_jd_id_prefix(layer)} {i}")
+            updateJD_ID(layer)
+            os.mkdir(f"{getJD_IDPrefix(layer)} {i}")
         os.chdir("..")
 
-def get_jd_id_prefix(layer):
+def getJD_IDPrefix(layer):
     global JD_ID
     result = math.floor(JD_ID)
 
@@ -34,7 +35,7 @@ def get_jd_id_prefix(layer):
         return "{0:.2f}".format(round(JD_ID,2))
         
 
-def update_jd_id(layer):
+def updateJD_ID(layer):
     global JD_ID
     if (layer == 1):
         JD_ID += 10
@@ -54,10 +55,23 @@ def update_jd_id(layer):
     return
 
 if __name__ == '__main__':
-    jd_file = open("jd.yaml","r")
+    parser = argparse.ArgumentParser(description="Gerador de Sistema de Arquivos Johnny Decimal")
+
+    parser.add_argument("--file", 
+            type=str, 
+            default="jd.yaml", 
+            help="O arquivo a ser usado para gerar o sistema de arquivos. Padrão: jd.yaml")
+    parser.add_argument("--path", 
+            type=str, 
+            default="./", 
+            help="A pasta aonde o sistema de arquivos será gerado. Padrão: diretório atual")
+
+    args = parser.parse_args()
+
+    os.chdir(args.path)
+    jd_file = open(args.file,"r")
     jd_dict = yaml.safe_load(jd_file)
 
-    print(jd_dict)
-    create_directory(1,jd_dict)
+    createFilesystem(1,jd_dict)
 
     jd_file.close()
