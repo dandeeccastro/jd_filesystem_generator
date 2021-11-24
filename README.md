@@ -1,29 +1,28 @@
 # Johnny Decimal File System Generator
 
-Um gerador de sistema de arquivos no formato [Johnny Decimal](https://johnnydecimal.com/)
+A filesystem generator based on the [Johnny Decimal](https://johnnydecimal.com/) format 
 
-## Instalação e Uso 
+## How to Use  
 
-- Basta clonar o repositório 
-- Pegue o arquivo de python e o jd.yaml com as pastas que você quer 
-- E rode o script :D
+- Run `main.py` as a shell script ```sh ./main.py``` or with Python ```sh python main.py```
+- Configuration and usage can be obtained by running with `-h`
 
 ## Roadmap 
 
-- [ ] Implementar isso como módulo do PIP
+- [ ] Implement as a PIP module
 
-- [x] Adicionar opções de argumentos de linhas de comando 
-	- [x] Selecionar qual arquivo yaml utilizar 
-	- [x] Selecionar onde que o sistema de arquivos vai ser gerado 
+- [x] Add command line arguments
+	- [x] Choose which yml file to use as configuration
+	- [x] Choose which directory to create the filesystem
 
-- [ ] Gerenciamento de erros 
-	- [ ] Para quando já existir a pasta lá 
-	- [ ] Para quando o arquivo YAML estiver mal formatado 
-	- [ ] E pros erros que acontecerem (eu ainda não testei tanto)
+- [ ] Error handling
+	- [ ] For when there is already a filesystem on the chosen path
+	- [ ] For when the YAML file is poorly formatted 
+	- [ ] For other errors (I haven't tested it thoroughly)
 
-- [ ] Novas funcionalidades 
-	- [ ] Atualizar os arquivos entre dois JD filesystems sepa? 
+- [ ] New features
+	- [ ] Maybe update one filesystem based on another?
 
 ## License 
 
-Não sei nem o que botar aqui
+Idk man lol
