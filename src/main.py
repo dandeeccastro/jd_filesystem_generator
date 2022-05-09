@@ -13,7 +13,6 @@ def parseArgs():
         opts, args = getopt.getopt(sys.argv[1:], "hf:p:m", 
                 ["help", "file=", "path="])
     except:
-        print("Puts mano q merda hein")
         sys.exit(2)
 
     source_file = "../res/jd.yaml"
@@ -21,7 +20,6 @@ def parseArgs():
 
     for opt, arg in opts: 
         if opt in ("-h","--help"): 
-            print("Puts mano pede ajuda") 
             sys.exit(2)
         elif opt in ("-f", "--file"):
             source_file = arg
@@ -53,7 +51,6 @@ def generateFileSystem(jd_data, dest_path):
         JD_ID += 10 
         current_upper_macro = JD_ID
         upper_name = "{} {}".format(generateLayerPrefix(JD_ID,1), upper)
-        print(upper_name) 
 
         os.mkdir(upper_name)
         os.chdir(upper_name)
@@ -63,7 +60,6 @@ def generateFileSystem(jd_data, dest_path):
             JD_ID += 1
             current_middle_macro = JD_ID
             middle_name = "{} {}".format(generateLayerPrefix(JD_ID,2), middle)
-            print(middle_name) 
 
             os.mkdir(middle_name)
             os.chdir(middle_name) 
@@ -71,7 +67,6 @@ def generateFileSystem(jd_data, dest_path):
             for end in jd_data[upper][middle]:
                 JD_ID += .01
                 end_name = "{} {}".format(generateLayerPrefix(JD_ID,3), end)
-                print(end_name) 
 
                 os.mkdir(end_name)
 
@@ -88,6 +83,3 @@ if __name__ == '__main__':
     jd_data = yaml.load(source_stream,Loader=yaml.Loader) 
 
     generateFileSystem(jd_data, dest_path)
-
-    print(source_file, dest_path) 
-    print("OKi") 
