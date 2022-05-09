@@ -6,127 +6,88 @@ import math
 import sys
 
 JD_ID = 00.00
+META = False
 
-def parse_args():
-    try:
-        opts, args = getopt.getopt(sys.argv[1:], "hf:p:",["file=","path="])
-    except getopt.GetoptError as err:
-        print(err)
+def parseArgs():
+    try: 
+        opts, args = getopt.getopt(sys.argv[1:], "hf:p:m", 
+                ["help", "file=", "path="])
+    except:
+        print("Puts mano q merda hein")
+        sys.exit(2)
 
-    jd_file = "./jd.yaml"
-    jd_path = "./"
+    source_file = "../res/jd.yaml"
+    dest_path = "./"
 
     for opt, arg in opts: 
-        if opt in ('-h','--help'):
-            usage()
-            sys.exit()
-        elif opt in ('-f','--file'):
-            jd_file = arg 
-        elif opt in ('-p','--path'):
-            path = arg
-        else:
-            print("Argument {} not recognized",arg)
-            usage()
+        if opt in ("-h","--help"): 
+            print("Puts mano pede ajuda") 
             sys.exit(2)
+        elif opt in ("-f", "--file"):
+            source_file = arg
+        elif opt in ("-p", "--path"):
+            dest_path = arg
+        elif opt in ("-m", "--meta"):
+            META = True
+        else:
+            assert False, "unknown option" 
 
-    return jd_file, jd_path
+    return source_file, dest_path
 
-def main():
-
-    jd_file, jd_path = parse_args()
-
-    jd_file = open(jd_file,"r")
-    jd_dict = yaml.safe_load(jd_file)
-    os.chdir(jd_path)
-
-    createFilesystem(1,jd_dict)
-
-    jd_file.close()
-
-def usage():
-    print(
-"""
-JD Filesystem Generator v0.1.1
-by dandeeccastro
-
-Generates filesystems based on the Johnny Decimal filesystem 
-format by using a properly formatted YAML file. Proper file 
-formatting is defined in YAML FORMATTING
-
-USAGE: main.py [OPTIONS]
-
-OPTIONS:
-    -h:                 Displays this help message 
-    -f, --file <file>:  Will generate filesystem based on <file> instead of ./jd.yaml 
-    -p, --path <path>:  Will generate filesystem on <path> instead of current directory
-
-YAML FORMATTING:
-    
-    The YAML file format is defined in the example below. Final folders 
-    are set with dashes, whereas middle and start folders are not. The 
-    script won't run beyond three layers deep
-
-    Start Folder 1:
-        Middle Folder 1:
-            - End Folder 1
-            - End Folder 2
-            - End Folder 3
-            - End Folder 4
-        Middle Folder 2:
-    Start Folder 2:
-        ...
-
-"""
-)
-
-def createFilesystem(layer, jd_data):
-    if layer > 3:
-        print("Out of bounds!")
-        return 
-    elif type(jd_data) is dict:
-        for kv_pair in jd_data.items():
-            updateJD_ID(layer)
-            os.mkdir(f"{getJD_IDPrefix(layer)} {kv_pair[0]}")
-            os.chdir(f"./{getJD_IDPrefix(layer)} {kv_pair[0]}")
-            createFilesystem(layer + 1, kv_pair[1])
-        os.chdir("..")
+def generateLayerPrefix(jd_id, level):
+    if level == 1: 
+        result = "{} - {}".format(math.floor(jd_id),math.floor(jd_id + 9))
+    elif level == 2: 
+        result = "{}".format(round(jd_id))
     else:
-        for i in jd_data:
-            updateJD_ID(layer)
-            os.mkdir(f"{getJD_IDPrefix(layer)} {i}")
+        result = "{:.2f}".format(jd_id)
+    return result
+
+def generateFileSystem(jd_data, dest_path): 
+    global JD_ID
+
+    os.chdir(dest_path)
+
+    for upper in jd_data: 
+
+        JD_ID += 10 
+        current_upper_macro = JD_ID
+        upper_name = "{} {}".format(generateLayerPrefix(JD_ID,1), upper)
+        print(upper_name) 
+
+        os.mkdir(upper_name)
+        os.chdir(upper_name)
+
+        for middle in jd_data[upper]:
+
+            JD_ID += 1
+            current_middle_macro = JD_ID
+            middle_name = "{} {}".format(generateLayerPrefix(JD_ID,2), middle)
+            print(middle_name) 
+
+            os.mkdir(middle_name)
+            os.chdir(middle_name) 
+
+            for end in jd_data[upper][middle]:
+                JD_ID += .01
+                end_name = "{} {}".format(generateLayerPrefix(JD_ID,3), end)
+                print(end_name) 
+
+                os.mkdir(end_name)
+
+            os.chdir("..")
+            JD_ID = current_middle_macro
+
         os.chdir("..")
-
-def getJD_IDPrefix(layer):
-    global JD_ID
-    result = math.floor(JD_ID)
-
-    if (layer == 1):
-        result -= result % 10 
-        return f"{result} - {result + 9}"
-    elif (layer == 2):
-        return f"{result}"
-    elif (layer == 3):
-        return "{0:.2f}".format(round(JD_ID,2))
-        
-
-def updateJD_ID(layer):
-    global JD_ID
-    if (layer == 1):
-        JD_ID += 10
-
-        jd_id_int = math.floor(JD_ID)
-        jd_id_int -= jd_id_int % 10 
-        JD_ID = float(jd_id_int)
-
-    elif (layer == 2):
-        JD_ID += 1
-
-        JD_ID = float(math.floor(JD_ID))
-
-    elif (layer == 3):
-        JD_ID += .01
-
-    return
+        JD_ID = current_upper_macro 
 
 if __name__ == '__main__':
-    main()
+
+    source_file, dest_path = parseArgs()
+    source_stream = open(source_file,'r') 
+    jd_data = yaml.load(source_stream,Loader=yaml.Loader) 
+
+    generateFileSystem(jd_data, dest_path)
+
+    print(source_file, dest_path) 
+    print("OKi") 
