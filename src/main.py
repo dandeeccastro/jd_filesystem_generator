@@ -38,9 +38,9 @@ def generateLayerPrefix(jd_id, level):
     if level == 1:
         result = "{:02} - {:02}".format(math.floor(jd_id),math.floor(jd_id + 9))
     elif level == 2:
-        result = "{}".format(round(jd_id))
+        result = "{:02}".format(round(jd_id))
     else:
-        result = "{:.2f}".format(jd_id)
+        result = "{:05.2f}".format(jd_id)
     return result
 
 def generateFileSystem(jd_data, dest_path):
